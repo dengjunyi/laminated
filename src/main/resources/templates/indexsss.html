@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页面</title>
+    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <style>
+        .col-md-1, .col-md-2 {
+           /* color: gold;*/
+            line-height: 3em;
+            text-align: center;
+            font-weight: bold;
+            z-index: 0;
+        }
+
+    </style>
+    <script src="/static/js/jquery-1.12.4.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            feedstock();
+            $("#dh").css("background - color", "khaki");
+
+            function feedstock() {
+                $.post("/feedstock/feedstockList", {}, function (data) {
+                    var str = " <div class=\"row\" id='dh' style='background-color:yellowgreen;'>\n" +
+                        "        <div class=\"col-md-1\">序号</div>\n" +
+                        "        <div class=\"col-md-2\">book号</div>\n" +
+                        "        <div class=\"col-md-2\">型号</div>\n" +
+                        "        <div class=\"col-md-1\">lot</div>\n" +
+                        "        <div class=\"col-md-1\">数量</div>\n" +
+                        "        <div class=\"col-md-1\">配方</div>\n" +
+                        "        <div class=\"col-md-2\">时间</div>\n" +
+                        "        <div class=\"col-md-1\">状态</div>\n" +
+                        "        <div class=\"col-md-1\">位置</div>\n" +
+                        "    </div>";
+                    for (var i = 0; i < data.length; i++) {
+                        $("#state2").parent().hide();
+                        str += "<div class='row' style='background-color:skyblue ' id=state\" + data[i].f_state + \">" +
+                            "<div class='col-md-1' id=" + data[i].f_id + ">" + data[i].f_id + "</div>" +
+                            "        <div class='col-md-2'>" + data[i].f_book + "</div>" +
+                            "        <div class='col-md-2'>" + data[i].f_model + "</div>" +
+                            "        <div class='col-md-1'>" + data[i].f_number + "</div>" +
+                            "        <div class='col-md-1'>" + data[i].f_quantity + "</div>" +
+                            "        <div class='col-md-1'>" + data[i].f_formula + "</div>" +
+                            "        <div class='col-md-2'>" + data[i].f_time + "</div>" +
+                            "        <div class='col-md-1' id=state" + data[i].f_state + ">" + data[i].f_state + "</div>" +
+                            "        <div class='col-md-1'>位置</div></div>";
+                    }
+                    $("#feedstockList").append(str);
+                    $("#feedstockList").find('div[class^="row"]').find('div[id^="state2"]').parent().html("<h4 style='text-align: center;color: red'>空</h4>");
+                    $("#feedstockList").find('div[class^="row"]').find('div[id^="state3"]').parent().hide();
+                }, "json")
+            }
+        });
+
+        function book() {
+            //判断进料表是否已存满
+            $.post("/feedstock/getFeedstockSize", {}, function (data) {
+                if (data) {
+                    var b_book = $(" input[ name='b_book' ] ").val();
+                    //先判断books表里有没有此book板，有就添加到进料表中
+                    $.post("/feedstock/feedstock", {b_book: b_book}, function (datas) {
+                        if (datas.f_state != "666") {
+                            var str = "<div class='col-md-1' id=" + datas.f_id + ">" + datas.f_id + "</div>" +
+                                "        <div class='col-md-2'>" + datas.f_book + "</div>" +
+                                "        <div class='col-md-2'>" + datas.f_model + "</div>" +
+                                "        <div class='col-md-1'>" + datas.f_number + "</div>" +
+                                "        <div class='col-md-1'>" + datas.f_quantity + "</div>" +
+                                "        <div class='col-md-1'>" + datas.f_formula + "</div>" +
+                                "        <div class='col-md-2'>" + datas.f_time + "</div>" +
+                                "        <div class='col-md-1' id=state"+ datas.f_state+">" + datas.f_state + "</div>" +
+                                "        <div class='col-md-1'>位置</div>";
+                            if ($("#" + datas.f_id).length > 0) {
+                                var fu = $("#" + datas.f_id).parent();
+                                $(fu).empty();
+                                $(fu).append(str);
+                            } else {
+                                //alert('对象不存在');
+                                $("#feedstockList").append("<div class='row' style='background-color:skyblue '>" + str + "</div>");
+                            }
+                            $("#state3").parent().css("background-color", "gold");
+                        } else {
+                            alert("books表里没有此book板");
+                        }
+
+                    }, "json")
+                } else {
+                    alert("位置已存满!");
+                }
+            })
+        }
+
+        function heatnumber() {
+            var s_heatnumber = $(" input[ name='s_heatnumber' ] ").val();
+            //判断是否存在此熔炉
+            $.post("/smelter/getSmelter", {s_heatnumber: s_heatnumber}, function (data) {
+                if (data != null && data != "") {
+                    //查询出此熔炉所对应book板信息
+                    $.post("/smelter/getFeedstockList", {f_formula: data.s_formula}, function (result) {
+                        for (var i = 0; i < result.length; i++) {
+                            $("#" + result[i].f_id).parent().css("background-color", "red");
+                            //修改进料表的状态
+                            /* $.post("/feedstock/updateFeedstock", {f_id: result[i].f_id}, function (isBaen) {
+                                 if (isBaen) {
+                                     alert("修改成功!");
+                                 }
+                             })*/
+                            //添加到进炉信息表
+                            //判断是否在前面加0
+                            function getNow(s) {
+                                return s < 10 ? '0' + s : s;
+                            }
+
+                            var myDate = new Date();
+
+                            var year = myDate.getFullYear();        //获取当前年
+                            var month = myDate.getMonth() + 1;   //获取当前月
+                            var date = myDate.getDate();            //获取当前日
+                            var h = myDate.getHours();              //获取当前小时数(0-23)
+                            var m = myDate.getMinutes();          //获取当前分钟数(0-59)
+                            var s = myDate.getSeconds();
+
+                            var now = year + '-' + getNow(month) + "-" + getNow(date) + " " + getNow(h) + ':' + getNow(m) + ":" + getNow(s);
+                          /*  alert("时间:" + now);
+                            alert("炉号:" + s_heatnumber);
+                            alert("型号:" + result[i].f_model);
+                            alert("数量:" + result[i].f_quantity);
+                            alert("配方:" + data.s_formula);
+                            alert("book号:" + result[i].f_book);*/
+
+
+                            //对象
+                            var display =  {
+                                "d_heatknumber": s_heatnumber,
+                                "d_model": result[i].f_model,
+                                "d_quantity": result[i].f_quantity,
+                                "d_formula": result[i].f_formula,
+                                "d_book": result[i].f_book,
+                                "d_time": now,
+                                "d_operator": "张三",
+                                "d_state": 1,
+                                "d_unlock": null
+                            }
+
+                            $.post("/display/addDisplay", {
+                                "d_heatknumber": s_heatnumber,
+                                "d_model": result[i].f_model,
+                                "d_quantity": result[i].f_quantity,
+                                "d_formula": result[i].f_formula,
+                                "d_book": result[i].f_book,
+                                "d_time": now,
+                                "d_operator": "张三",
+                                "d_state": 1,
+                                "d_unlock": null
+                            }, function (isBaen) {
+                                alert("进入添加!");
+                                if (isBaen) {
+                                    alert("添加成功!");
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    alert("没有此熔炉");
+                }
+            })
+        }
+
+
+    </script>
+</head>
+<body>
+<div class="input-group input-group-lg" style="width: 40%;margin: auto;margin-top: 20px">
+    <input type="text" name="b_book" class="form-control" placeholder="请输入要添加的book号" style="">
+    <span class="input-group-btn">
+        <button class="btn btn-primary" onclick="book()">添加Book板</button>
+    </span>
+    <input type="text" name="s_heatnumber" class="form-control" placeholder="请输入炉号">
+    <span class="input-group-btn">
+        <button class="btn btn-primary" onclick="heatnumber()">查询</button>
+    </span>
+</div>
+<div class="container" id="feedstockList" style="margin-top: 20px">
+</div>
+</body>
+
+
+<script src="/static/js/bootstrap.js"></script>
+</html>

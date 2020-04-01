@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tjy.laminated.dao.oracle.emp.EmpMapper">
+
+    <select id="count"
+            parameterType="cn.tjy.laminated.dao.oracle.emp.EmpMapper" statementType="CALLABLE">
+	 call count_emp(
+			#{deptno,mode=IN,jdbcType=INTEGER},
+			#{result,mode=OUT,jdbcType=INTEGER},
+			#{execDate,mode=OUT,jdbcType=DATE}
+		)
+	</select>
+</mapper>

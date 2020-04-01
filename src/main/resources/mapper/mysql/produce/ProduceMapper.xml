@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tjy.laminated.dao.mysql.produce.ProduceMapper">
+    <select id="getProduce" resultType="cn.tjy.laminated.pojo.mysql.Produce">
+        select * from produce
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="p_heatnumber != null and p_heatnumber != ''">
+                and p_heatnumber = #{p_heatnumber}
+            </if>
+        </trim>
+    </select>
+    <insert id="addProduce">
+        insert into produce(p_heatnumber, p_number, p_time, p_operator)
+        values (#{p_heatnumber},#{p_number},#{p_time},#{p_operator},)
+    </insert>
+</mapper>

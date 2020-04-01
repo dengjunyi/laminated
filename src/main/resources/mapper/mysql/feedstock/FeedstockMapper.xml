@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tjy.laminated.dao.mysql.feedstock.FeedstockMapper">
+    <insert id="addFeedstock">
+        insert into feedstock(f_book, f_model,f_number, f_quantity, f_formula, f_time, f_state) values
+         (#{f_book},#{f_model},#{f_number},#{f_quantity},#{f_formula},#{f_time},#{f_state})
+    </insert>
+    <update id="updateFeedstock">
+        update feedstock
+        <trim prefix="set" suffixOverrides=",">
+            <if test="f_book != null and f_book != ''">
+                f_book=#{f_book},
+            </if>
+            <if test="f_model != null and f_model != ''">
+                f_model = #{f_model},
+            </if>
+            <if test="f_quantity != null and f_quantity != ''">
+                f_quantity = #{f_quantity},
+            </if>
+            <if test="f_formula != null and f_formula != ''">
+                f_formula = #{f_formula},
+            </if>
+            <if test="f_time != null and f_time != ''">
+                f_time = #{f_time},
+            </if>
+            <if test="f_state != null and f_state != ''">
+                f_state = #{f_state}
+            </if>
+        </trim>
+        where f_id= #{f_id}
+    </update>
+    <select id="getFeedstockList" resultType="cn.tjy.laminated.pojo.mysql.Feedstock">
+        SELECT * FROM feedstock
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="f_book != null and f_book != ''">
+                f_book = #{f_book}
+            </if>
+            <if test="f_formula != null and f_formula != ''">
+              and f_formula = #{f_formula}
+            </if>
+            <if test="f_state != null and f_state != ''">
+                and f_state = #{f_state}
+            </if>
+        </trim>
+    </select>
+    <select id="getFeedstockById" resultType="cn.tjy.laminated.pojo.mysql.Feedstock">
+        select * from feedstock
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="f_id != null and f_id != ''">
+                f_id = #{f_id}
+            </if>
+            <if test="f_book != null and f_book != ''">
+                and f_book = #{f_book}
+            </if>
+            and f_state=1
+        </trim>
+    </select>
+    <select id="getFeedstockSize" resultType="cn.tjy.laminated.pojo.mysql.Feedstock">
+        SELECT * FROM feedstock WHERE f_state IN(1,3)
+    </select>
+</mapper>

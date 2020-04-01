@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tjy.laminated.dao.oracle.users.UsersMapper">
+
+    <select id="getUsers" statementType="CALLABLE">
+         {call barcode_dmc_pd_employee(
+	        #{zip_code,mode=IN,jdbcType=VARCHAR},
+	        #{fitip,mode=IN,jdbcType=VARCHAR},
+	        #{in_ip,mode=IN,jdbcType=VARCHAR},
+	         #{IN_TYPE,mode=IN,jdbcType=INTEGER},
+	         #{EMPLOYEE_NAME,mode=OUT,jdbcType=VARCHAR},
+	         #{KEY73,mode=OUT,jdbcType=VARCHAR},
+	        #{HINT,mode=OUT,jdbcType=VARCHAR}
+	    )}
+
+
+    </select>
+</mapper>

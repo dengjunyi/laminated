@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tjy.laminated.dao.mysql.display.DisplayMapper">
+    <select id="getDisplayList" resultType="cn.tjy.laminated.pojo.mysql.Display">
+        select * from display
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="d_book != null and d_book != ''">
+                and d_book = #{d_book}
+            </if>
+            <if test="d_lot != null and d_lot != ''">
+                and d_lot = #{d_lot}
+            </if>
+            <if test="d_heatknumber != null and d_heatknumber != ''">
+                and d_heatknumber = #{d_heatknumber}
+            </if>
+        </trim>
+    </select>
+    <select id="getDisplay" resultType="cn.tjy.laminated.pojo.mysql.Display">
+         select * from display where d_book=#{d_book} and d_state=1 ORDER BY d_time ASC LIMIT 0,1;
+    </select>
+    <insert id="addDisplay">
+        insert into display(d_heatknumber, d_model, d_quantity, d_formula, d_book, d_time, d_operator, d_state,d_unlock)
+        VALUES
+        (#{d_heatknumber},#{d_model},#{d_quantity},#{d_formula},#{d_book},#{d_time},#{d_operator}
+        ,#{d_state},#{d_unlock})
+    </insert>
+    <update id="updateDisplay">
+        UPDATE display
+        <trim prefix="set" suffixOverrides=",">
+            <if test="d_state != null and d_state != ''">
+                d_state = #{d_state},
+            </if>
+            <if test="d_unlock != null and d_unlock != ''">
+                d_unlock = #{d_unlock}
+            </if>
+        </trim>
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="d_book != null and d_book != ''">
+                d_book= #{d_book}
+            </if>
+            <if test="d_lot != null and d_lot != ''">
+                and d_lot = #{d_lot}
+            </if>
+        </trim>
+    </update>
+    <delete id="delDisplay">
+      delete from display where d_id=#{d_id}
+    </delete>
+
+</mapper>

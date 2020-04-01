@@ -1,0 +1,47 @@
+body{
+    background: rgb(255, 222, 192);
+    padding-bottom: .01rem; 
+}
+.h1-title{
+    font-size: .2rem;
+    line-height: 1.5;
+    font-weight: bold;
+    text-align: center; 
+    background: rgb(252, 203, 158);  
+}
+.btn-body{
+    padding-top: .3rem;
+}
+.btn-body .btn-item{
+    display: block;
+    width: 80%;
+    height: .8rem;
+    font-size: .24rem;
+    text-align: center;
+    line-height: .8rem;
+    color: black;
+    border:2px solid black;
+    margin: 0 auto .1rem;
+    background: #5cacee;
+    cursor: pointer;
+}
+.tips{
+    font-size: .14rem;
+    padding: .1rem;
+}
+
+.input-item{
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: .2rem;
+}
+.input-item label{
+    display: inline-block;
+    width: 20%;
+    font-size: .20rem;
+    text-align: right;
+}
+.input-item input{
+    font-size: .20rem;
+    border:1px solid black;
+}

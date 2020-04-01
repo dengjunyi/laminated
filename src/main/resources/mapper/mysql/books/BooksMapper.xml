@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tjy.laminated.dao.mysql.books.BooksMapper">
+    <select id="getBooksList" resultType="cn.tjy.laminated.pojo.mysql.Books">
+        select * from books
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="b_book != null and b_book != ''">
+                and b_book = #{b_book}
+            </if>
+            <if test="b_lot != null and b_lot != ''">
+                and b_lot = #{b_lot}
+            </if>
+            AND b_state=1 ORDER BY b_time ASC;
+        </trim>
+
+    </select>
+    <select id="getBooks" resultType="cn.tjy.laminated.pojo.mysql.Books">
+        select * from books where b_book=#{b_book} and b_state=1 ORDER BY b_time ASC LIMIT 0,1;
+    </select>
+    <insert id="addBooks">
+        insert into books(b_lot, b_model, b_quantity, b_formula, b_book, b_time, b_operator, b_state)
+         values (#{b_lot},#{b_model},#{b_quantity},#{b_formula},#{b_book},#{b_time},#{b_operator},#{b_state});
+    </insert>
+    <update id="updateBooks">
+        UPDATE books
+        <trim prefix="set" suffixOverrides=",">
+            <if test="b_model != null and b_model != ''">
+                b_model = #{b_model},
+            </if>
+            <if test="b_quantity != null and b_quantity != ''">
+                b_quantity = #{b_quantity},
+            </if>
+            <if test="b_formula != null and b_formula != ''">
+                b_formula = #{b_formula},
+            </if>
+            <if test="b_time != null and b_time != ''">
+                b_time = #{b_time},
+            </if>
+            <if test="b_operator != null and b_operator != ''">
+                b_operator = #{b_operator},
+            </if>
+            <if test="b_state != null and b_state != ''">
+                b_state = #{b_state},
+            </if>
+            <if test="b_unlock != null and b_unlock != ''">
+                b_unlock = #{b_unlock}
+            </if>
+        </trim>
+        <trim prefix="where" prefixOverrides="AND |OR">
+            <if test="b_book != null and b_book != ''">
+                b_book= #{b_book}
+            </if>
+            <if test="b_lot != null and b_lot != ''">
+               and b_lot = #{b_lot}
+            </if>
+        </trim>
+    </update>
+    <delete id="delBooks">
+       delete from books where b_id='b_id'
+    </delete>
+</mapper>

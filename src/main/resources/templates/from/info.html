@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页</title>
+
+    <link rel="stylesheet" href="/static/css/from/_reset.css">
+    <link rel="stylesheet" href="/static/css/from/style.css">
+    <style>
+        textarea {
+            width: 100%;
+            height: 2rem;
+            font-size: .16rem;
+            padding: 0;
+        }
+
+        input {
+            display: block;
+            width: 98%;
+            height: .4rem;
+            font-size: .16rem;
+            margin: 0 auto;
+            border: 1px solid black;
+        }
+    </style>
+
+</head>
+<body>
+<audio id="error" src="/static/mp3/error.mp3" loop="loop"></audio>
+<audio id="book_error" src="/static/mp3/error.mp3" loop="loop"></audio><!--<audio id="error" src="/mp3/error.wav" loop="loop">你的浏览器不支持audio标签。</audio>-->
+<div class="h1-title">DMC菲林</div>
+<textarea id="textMsg" cols="30" rows="10" readonly="readonly"></textarea>
+<div class="tips">book板号</div>
+<input type="text" id="book" autofocus="autofocus">
+<div class="tips">lot卡号</div>
+<input type="text" id="lot" autofocus="autofocus">
+<div class="tips">提示：已连接</div>
+<div class="tips"><a href="/index">返回主菜单</a></div>
+<script src="/static/js/layer/jquery.min.js"></script>
+<script src="/static/js/layer/calc.js"></script>
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+
+
+   $("#book").show().focus();
+   document.onkeydown = function(e){
+       var ev = document.all ? window.event : e;
+       if(ev.keyCode==13) {
+           var v1 = $("#book").prop("disabled");
+           if (v1) {
+               alert("lot");
+
+           } else {
+               var book = $("#book").val();
+               if (book == null || book == undefined || book == "") {
+                   //sound("rights");
+                   sounds("没有输入book信息");
+                   //alert("还没有输入Book板信息!"8888815125903
+                   // )
+               } else {
+                   $.post("/Boolean", {book: book}, function (data) {
+                       //alert(data);
+                       if (data) {
+                           sounds("book信息正确");
+                           $("#book").attr("disabled", true);
+                           //失去焦点
+                           $("#book").blur(function () {
+                               var curValue = $("#username").val();
+                               if ($.trim(curValue) == "") {
+                                   $(this).val(this.defaultValue);
+                               }
+                           })
+                           $("#book").blur(function () {
+                               if ($("#book").val().length < 1) {
+                                   $("#book").hide();//失去焦点后判断有没有输入
+                               }
+                           });
+                           $("#lot").show().focus();//获得焦点
+                           //sound("right");
+                       } else {
+                           //sound("error");
+                           sounds("错误!");
+                       }
+                   })
+               }
+           }
+       }
+   }
+
+
+
+    function sound(audio) {
+        //alert(audio);
+        var audio = document.getElementById(audio);
+        if (audio) {
+            audio.loop = false;
+            audio.play();
+            audio.addEventListener('ended', function () {
+                //播放完
+                //在这个方法里写相应的逻辑就可以了
+            }, false);
+        }
+    }
+
+    function sounds(name) {
+        $.post("/sound", {name: name}, function (data) {
+        })
+    }
+
+    $(function () {
+        setTimeout('location.href="/fun"', 1000 * 60);
+    })
+</script>
+</body>
+</html>
