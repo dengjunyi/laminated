@@ -4,9 +4,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>首页</title>
-
+<!--    <link rel="stylesheet" href="/static/css/bootstrap.css">-->
     <link rel="stylesheet" href="/static/css/from/_reset.css">
     <link rel="stylesheet" href="/static/css/from/style.css">
+   <!-- 弹框-->
+
+    <link rel="stylesheet" href="/static/css/pop-up/example.css">
+
+    <link rel="stylesheet" href="/static/css/pop-up/sweet-alert.css">
+
     <style>
         textarea {
             width: 100%;
@@ -30,16 +36,35 @@
 <audio id="error" src="/static/mp3/error.mp3" loop="loop"></audio>
 <audio id="book_error" src="/static/mp3/error.mp3" loop="loop"></audio><!--<audio id="error" src="/mp3/error.wav" loop="loop">你的浏览器不支持audio标签。</audio>-->
 <div class="h1-title">DMC菲林</div>
-<textarea id="textMsg" cols="30" rows="10" readonly="readonly"></textarea>
+<!--<textarea id="textMsg" cols="30" rows="10" readonly="readonly"></textarea>-->
 <div class="tips">book板号</div>
 <input type="text" id="book" autofocus="autofocus">
 <div class="tips">lot卡号</div>
 <input type="text" id="lot" autofocus="autofocus">
-<div class="tips">提示：已连接</div>
+<!--按纽作为addon-->
+<!--<div class="input-group" style="width: 20%">
+    &lt;!&ndash;<input type="text" class="form-control" placeholder="请输入用户名">&ndash;&gt;
+    <span class="input-group-btn ">
+        <button class="btn btn-primary" type="button">完成</button>
+    </span>
+</div>-->
+
+<!--<div class="tips">提示：已连接</div>-->
 <div class="tips"><a href="/index">返回主菜单</a></div>
+
+<ul class="examples">
+    <li class="warning confirm">
+        <div class="ui">
+            <button>完成</button>
+        </div>
+
+    </li>
+</ul>
 <script src="/static/js/layer/jquery.min.js"></script>
 <script src="/static/js/layer/calc.js"></script>
 <script src="/static/js/jquery-1.12.4.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/pop-up/sweet-alert.js"></script>
 <script type="text/javascript">
 
 
@@ -89,7 +114,7 @@
    }
 
 
-
+    //播放声音
     function sound(audio) {
         //alert(audio);
         var audio = document.getElementById(audio);
@@ -111,6 +136,27 @@
     $(function () {
         setTimeout('location.href="/fun"', 1000 * 60);
     })
+
+
+    /*弹框*/
+   document.querySelector('ul.examples li.warning.confirm button').onclick = function(){
+       swal({
+               title: "确定完成吗?",
+               /*text: "You will not be able to recover this imaginary file!",*/
+               type: "warning",
+               showCancelButton: true,
+               confirmButtonColor: '#DD6B55',
+               confirmButtonText: '完成 ',
+               closeOnConfirm: false,
+               cancelButtonText: '取消',
+               //closeOnCancel: false
+           },
+           function(){
+
+               swal("完成!", "进行下一个BOOK板录入!", "success");
+           });
+   };
+
 </script>
 </body>
 </html>

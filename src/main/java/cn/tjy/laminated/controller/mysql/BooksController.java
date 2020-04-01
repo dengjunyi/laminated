@@ -73,6 +73,18 @@ public class BooksController {
         return "from/fun";
     }
 
+
+    //录入book页面
+    //跳转功能列表  fun
+    @RequestMapping("/book")
+    public String book() {
+        System.out.println("进入book页面!");
+        return "from/book";
+    }
+
+
+
+    //绑定book和lot
     @RequestMapping("/info")
     public String info(@RequestParam(name = "cmd") String cmd, @RequestParam(name = "status") Integer status) {
         System.out.println("cmd:" + cmd);
@@ -81,7 +93,7 @@ public class BooksController {
         return "from/info";
     }
 
-    //信息比对  info
+    //信息比对1  info
     @RequestMapping(value = "/Boolean", method = RequestMethod.POST)
     @ResponseBody
     public Boolean isTrue(@RequestParam("book") String book) throws Exception {
@@ -90,7 +102,7 @@ public class BooksController {
         return aBoolean;
     }
 
-    //信息比对  info
+    //信息比对2  声音
     @RequestMapping(value = "/sound", method = RequestMethod.POST)
     @ResponseBody
     public void sound(@RequestParam("name") String name) throws Exception {
