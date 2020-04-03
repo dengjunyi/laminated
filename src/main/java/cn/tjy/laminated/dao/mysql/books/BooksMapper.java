@@ -1,11 +1,11 @@
 package cn.tjy.laminated.dao.mysql.books;
 
-
-
 import cn.tjy.laminated.pojo.mysql.Books;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
@@ -21,7 +21,7 @@ public interface BooksMapper {
      */
     public List<Books> getBooksList(@Param("b_book") String b_book, @Param("b_lot") String b_lot) throws Exception;
 
-    public Books getBooks(@Param("b_book")String b_book) throws Exception;
+    public Books getBooks(@Param("b_book")String b_book,@Param("b_lot") String b_lot,@Param("b_state") Integer b_state) throws Exception;
 
     /**
      * 添加
@@ -44,4 +44,10 @@ public interface BooksMapper {
      * @return
      */
     public int delBooks(Books books) throws Exception;
+
+
+    public void login(Map<String,Object> map);
+
+
+    public void lot(Map<String,Object> map);
 }

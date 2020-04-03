@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BooksServiceimpl implements BooksService {
@@ -19,8 +20,8 @@ public class BooksServiceimpl implements BooksService {
     }
 
     @Override
-    public Books getBooks(String b_book) throws Exception {
-        return booksMapper.getBooks(b_book);
+    public Books getBooks(String b_book,String b_lot,Integer b_state) throws Exception {
+        return booksMapper.getBooks(b_book,b_lot,b_state);
     }
 
     @Override
@@ -37,4 +38,16 @@ public class BooksServiceimpl implements BooksService {
     public int delBooks(Books books) throws Exception {
         return booksMapper.delBooks(books);
     }
+
+    @Override
+    public void login(Map<String, Object> map) {
+        booksMapper.login(map);
+    }
+
+    @Override
+    public void lot(Map<String, Object> map) {
+        booksMapper.lot(map);
+    }
+
+
 }

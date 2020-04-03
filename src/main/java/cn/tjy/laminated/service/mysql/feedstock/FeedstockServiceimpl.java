@@ -38,4 +38,5 @@ public class FeedstockServiceimpl implements FeedstockService{
     public int updateFeedstock(Feedstock feedstock) throws Exception {
         return feedstockMapper.updateFeedstock(feedstock);
     }
+
 }

@@ -2,6 +2,7 @@ package cn.tjy.laminated.dao.mysql.feedstock;
 
 import cn.tjy.laminated.pojo.mysql.Feedstock;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -36,5 +37,10 @@ public interface FeedstockMapper {
      * 修改
      */
     public int updateFeedstock(Feedstock feedstock) throws Exception;
+
+
+    @Select("SELECT * FROM feedstock WHERE f_book = #{f_book}")
+    Feedstock findUserByPhone(@Param("f_book") String f_book);
+
 
 }

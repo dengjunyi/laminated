@@ -2,6 +2,7 @@ package cn.tjy.laminated.service.mysql.feedstock;
 
 import cn.tjy.laminated.pojo.mysql.Feedstock;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,5 +26,6 @@ public interface FeedstockService {
      * 修改
      */
     public int updateFeedstock(Feedstock feedstock) throws Exception;
+
 
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<title></title>登录表单HTML页面</title>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!-- Custom Theme files -->
+    <link href="/static/css/login/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- //Custom Theme files -->
+</head>
+<body>
+<!-- main -->
+<div class="main">
+    <h1>简单漂亮的登录表单</h1>
+    <div class="main-row">
+        <div class="agileits-top">
+            <form onclick="login()" method="post">
+                <input class="text" type="text" id="username" name="username" placeholder="员工信息" required>
+               <!-- <input class="text" type="password" name="password" placeholder="密码" required>-->
+                <input type="submit" value="登陆">
+            </form>
+           <!-- <p><a href="#">忘记密码?</a></p>-->
+        </div>
+    </div>
+    <!-- copyright -->
+ <!--   <div class="copyright">
+        <p> © 2019 Easy Simple Login Form . All rights reserved | Design by <a href="http://www.bootstrapmb.com/" title="bootstrapmb">bootstrapmb</a></p>
+    </div>-->
+
+</div>
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+function login() {
+    var username=$("#username").val();
+    $.post("/logins",{username:username},function (data) {
+        if (data){
+           alert("登录成功")
+        } else {
+            alert("登录失败")
+        }
+    },"json")
+}
+
+</script>
+</body>
+</html>

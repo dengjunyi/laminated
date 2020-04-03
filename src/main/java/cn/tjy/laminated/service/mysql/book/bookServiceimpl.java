@@ -7,9 +7,11 @@ import cn.tjy.laminated.pojo.mysql.Books;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
-public class bookServiceimpl implements bookService {
+public class bookServiceimpl implements bookService
+{
 
     @Resource
     bookMapper bookMapper;
@@ -23,5 +25,15 @@ public class bookServiceimpl implements bookService {
         }
         System.out.println("iaBaen:"+iaBaen);
         return iaBaen;
+    }
+
+    @Override
+    public List<Book> getBook() {
+        return bookMapper.getBook();
+    }
+
+    @Override
+    public int addBook(Book books) {
+        return bookMapper.addBook(books);
     }
 }

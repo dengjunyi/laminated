@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class CreateBarcode {
     public static void main(String[] args) throws IOException {
-       /* BarcodeSettings settings = new BarcodeSettings();//创建BarcodeSettings实例
+      /*  BarcodeSettings settings = new BarcodeSettings();//创建BarcodeSettings实例
         settings.setType(BarCodeType.Code_128);//指定条码类型
         settings.setData("123456789");//设置条码数据
         settings.setData2D("123456789");//设置条码显示数据

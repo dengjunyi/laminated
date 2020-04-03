@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>首页</title>
-<!--    <link rel="stylesheet" href="/static/css/bootstrap.css">-->
+    <!--    <link rel="stylesheet" href="/static/css/bootstrap.css">-->
     <link rel="stylesheet" href="/static/css/from/_reset.css">
     <link rel="stylesheet" href="/static/css/from/style.css">
-   <!-- 弹框-->
+    <!-- 弹框-->
 
     <link rel="stylesheet" href="/static/css/pop-up/example.css">
 
@@ -34,20 +34,14 @@
 </head>
 <body>
 <audio id="error" src="/static/mp3/error.mp3" loop="loop"></audio>
-<audio id="book_error" src="/static/mp3/error.mp3" loop="loop"></audio><!--<audio id="error" src="/mp3/error.wav" loop="loop">你的浏览器不支持audio标签。</audio>-->
+<audio id="book_error" src="/static/mp3/error.mp3" loop="loop"></audio>
+<!--<audio id="error" src="/mp3/error.wav" loop="loop">你的浏览器不支持audio标签。</audio>-->
 <div class="h1-title">DMC菲林</div>
 <!--<textarea id="textMsg" cols="30" rows="10" readonly="readonly"></textarea>-->
 <div class="tips">book板号</div>
 <input type="text" id="book" autofocus="autofocus">
 <div class="tips">lot卡号</div>
-<input type="text" id="lot" autofocus="autofocus">
-<!--按纽作为addon-->
-<!--<div class="input-group" style="width: 20%">
-    &lt;!&ndash;<input type="text" class="form-control" placeholder="请输入用户名">&ndash;&gt;
-    <span class="input-group-btn ">
-        <button class="btn btn-primary" type="button">完成</button>
-    </span>
-</div>-->
+<input type="text" id="lot" disabled="disabled" autofocus="autofocus">
 
 <!--<div class="tips">提示：已连接</div>-->
 <div class="tips"><a href="/index">返回主菜单</a></div>
@@ -68,50 +62,72 @@
 <script type="text/javascript">
 
 
-   $("#book").show().focus();
-   document.onkeydown = function(e){
-       var ev = document.all ? window.event : e;
-       if(ev.keyCode==13) {
-           var v1 = $("#book").prop("disabled");
-           if (v1) {
-               alert("lot");
+    $("#book").show().focus();
+    document.onkeydown = function (e) {
+        var ev = document.all ? window.event : e;
+        if (ev.keyCode == 13) {
+            var v1 = $("#book").prop("disabled");//禁用输入Lot号
+            var book = $("#book").val();//获取book值
+            var lot = $("#lot").val();//获取lot值
+            if (v1) {
+                //alert("lot");
+                if (book == null || book == undefined || book == "") {
+                    alert("请输入book号!");
+                } else {
+                    if (lot == null || lot == undefined || lot == "") {
+                        alert("请输入lot号!");
+                    } else {
+                        $.post("/lot", {book: book, lot: lot}, function (datas, status) {
+                            //alert("状态:" + status);
+                            //alert("绑定:" + datas);
+                            sounds(datas);
+                        })
+                        $("#lot").val("");//清空Lot
+                    }
 
-           } else {
-               var book = $("#book").val();
-               if (book == null || book == undefined || book == "") {
-                   //sound("rights");
-                   sounds("没有输入book信息");
-                   //alert("还没有输入Book板信息!"8888815125903
-                   // )
-               } else {
-                   $.post("/Boolean", {book: book}, function (data) {
-                       //alert(data);
-                       if (data) {
-                           sounds("book信息正确");
-                           $("#book").attr("disabled", true);
-                           //失去焦点
-                           $("#book").blur(function () {
-                               var curValue = $("#username").val();
-                               if ($.trim(curValue) == "") {
-                                   $(this).val(this.defaultValue);
-                               }
-                           })
-                           $("#book").blur(function () {
-                               if ($("#book").val().length < 1) {
-                                   $("#book").hide();//失去焦点后判断有没有输入
-                               }
-                           });
-                           $("#lot").show().focus();//获得焦点
-                           //sound("right");
-                       } else {
-                           //sound("error");
-                           sounds("错误!");
-                       }
-                   })
-               }
-           }
-       }
-   }
+                }
+
+            } else {
+
+                if (book == null || book == undefined || book == "") {
+                    //sound("rights");
+                    sounds("没有输入book信息");
+                    //alert("还没有输入Book板信息!"8888815125903
+                    // )
+                } else {
+                    $.post("/Boolean", {book: book}, function (data,status) {
+                        //alert(status)
+                        //alert(data);
+                        if (data) {
+                           // alert("888")
+                            sounds("book信息正确");
+                            $("#book").attr("disabled", true);
+                            //失去焦点
+                            $("#book").blur(function () {
+                                var curValue = $("#username").val();
+                                if ($.trim(curValue) == "") {
+                                    $(this).val(this.defaultValue);
+                                }
+                            })
+                            $("#book").blur(function () {
+                                if ($("#book").val().length < 1) {
+                                    $("#book").hide();//失去焦点后判断有没有输入
+                                }
+                            });
+                            $("#lot").attr("disabled", false);
+                            $("#lot").focus();//获得焦点
+                            //sound("right");
+                        } else {
+                           // alert("6666")
+                            //sound("error");
+                            sounds("错误!");
+                            $("#book").val("");
+                        }
+                    }, "json")
+                }
+            }
+        }
+    }
 
 
     //播放声音
@@ -134,28 +150,28 @@
     }
 
     $(function () {
-        setTimeout('location.href="/fun"', 1000 * 60);
+        setTimeout('location.href="/fun"', 1000 * 300);
     })
 
 
     /*弹框*/
-   document.querySelector('ul.examples li.warning.confirm button').onclick = function(){
-       swal({
-               title: "确定完成吗?",
-               /*text: "You will not be able to recover this imaginary file!",*/
-               type: "warning",
-               showCancelButton: true,
-               confirmButtonColor: '#DD6B55',
-               confirmButtonText: '完成 ',
-               closeOnConfirm: false,
-               cancelButtonText: '取消',
-               //closeOnCancel: false
-           },
-           function(){
+    document.querySelector('ul.examples li.warning.confirm button').onclick = function () {
+        swal({
+                title: "确定完成吗?",
+                /*text: "You will not be able to recover this imaginary file!",*/
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: '完成 ',
+                closeOnConfirm: false,
+                cancelButtonText: '取消',
+                //closeOnCancel: false
+            },
+            function () {
 
-               swal("完成!", "进行下一个BOOK板录入!", "success");
-           });
-   };
+                swal("完成!", "进行下一个BOOK板录入!", "success");
+            });
+    };
 
 </script>
 </body>

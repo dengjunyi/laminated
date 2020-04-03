@@ -17,4 +17,14 @@ public class UsersServiceimpl implements UsersService {
     public void getUsers(Map<String, Object> map) {
         usersMapper.getUsers(map);
     }
+
+    @Override
+    public void login(Map<String, Object> map) {
+        usersMapper.login(map);
+    }
+
+    @Override
+    public void lot(Map<String, Object> map) {
+        usersMapper.lot(map);
+    }
 }

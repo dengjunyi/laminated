@@ -3,8 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.tjy.laminated.dao.mysql.book.bookMapper">
+    <insert id="addBook">
+        insert into book(book, state) values (#{book},#{state})
+    </insert>
 
     <select id="getBoolean" resultType="cn.tjy.laminated.pojo.mysql.Book">
         select * from book where book=#{book}
+    </select>
+    <select id="getBook" resultType="cn.tjy.laminated.pojo.mysql.Book">
+        select * from book
     </select>
 </mapper>
