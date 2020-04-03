@@ -1,0 +1,35 @@
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+
+<!-- 导入/导出到 Excel 操作 -->
+<div class="layui-btn-group" style="float: right; height: 55px; margin-top: 10px; margin-right: 35px;">
+    <button onclick="exportUser()">导出Excel</button>
+</div>
+
+
+<form method="post" enctype="multipart/form-data" id="form" action="/upload">
+    <input type="file" name="filename"/>
+    <input type="submit" value="提交上传"/>
+</form>
+
+</body>
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+    function exportUser(){
+        window.location.href="/UserExcelDownloads";
+    }
+    function upload() {
+
+    }
+</script>
+</html>
