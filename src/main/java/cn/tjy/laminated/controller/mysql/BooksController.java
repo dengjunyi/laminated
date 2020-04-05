@@ -2,12 +2,9 @@ package cn.tjy.laminated.controller.mysql;
 
 import cn.tjy.laminated.config.ImportService;
 import cn.tjy.laminated.dao.mysql.feedstock.FeedstockMapper;
-import cn.tjy.laminated.pojo.mysql.Book;
 import cn.tjy.laminated.pojo.mysql.Books;
 import cn.tjy.laminated.pojo.mysql.Feedstock;
 import cn.tjy.laminated.pojo.mysql.Smelter;
-import cn.tjy.laminated.pojo.oracle.Users;
-import cn.tjy.laminated.service.mysql.book.bookService;
 import cn.tjy.laminated.service.mysql.books.BooksService;
 import cn.tjy.laminated.service.mysql.feedstock.FeedstockService;
 import cn.tjy.laminated.service.mysql.smelter.SmelterService;
@@ -15,7 +12,6 @@ import cn.tjy.laminated.service.oracle.help.HelpService;
 import cn.tjy.laminated.service.oracle.users.UsersService;
 
 import cn.tjy.laminated.util.sound;
-import oracle.sql.NUMBER;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -24,23 +20,19 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,58 +70,21 @@ public class BooksController {
     //跳转功能列表  fun
     @RequestMapping("/fun")
     public String fun() {
-
-
-       /* Map map = new HashMap();
-        map.put("zip_code", "");
-        map.put("fitip", "DMC");
-        map.put("in_ip", "192.168.1.102");
-        map.put("IN_TYPE", 1);
-        usersService.getUsers(map);
-        System.out.println("调用成功");
-        System.out.println("lot号:" + map.get("KEY73"));
-        System.out.println("EMPLOYEE_NAME:" + map.get("EMPLOYEE_NAME"));
-        System.out.println("HINT:" + map.get("HINT"));
- *//*  I_W0           IN  VARCHAR2, -- LOT
-    I_DIV          IN  VARCHAR2, -- DIV_CODE
-    O_FLAG         OUT NUMBER,   -- 0: 错误  1: 正确
-    O_PROC         OUT VARCHAR2, -- 配方
-    O_CPNUMBER     OUT VARCHAR2, -- 型号
-    O_QTY          OUT NUMBER,   -- 数量
-    O_HINT         OUT VARCHAR2  -- 错误提示*//*
-
-        Map map1 = new HashMap();
-        map1.put("I_W0", "123");
-        map1.put("I_DIV", "");
-        usersService.lot(map1);
-        System.out.println("调用成功");
-        System.out.println("判断:" + map1.get("O_FLAG"));
-        // System.out.println("EMPLOYEE_NAME:" + map.get("EMPLOYEE_NAME"));
-        System.out.println("错误提示:" + map1.get("O_HINT"));
-
-
-        System.out.println("登录判断!");
-        // System.out.println("员工号:" + username);
-        Boolean isBaen = false;
-        Map ma2 = new HashMap();
-        ma2.put("I_USER_CODE", "888");
-        ma2.put("I_TYPE", "1");
-        ma2.put("I_DIV", "");
-        usersService.login(ma2);
-        System.out.println("调用成功");
-        System.out.println("员工号:" + ma2.get("O_USER__NAME"));
-        System.out.println("状态:" + ma2.get("O_KEY73"));
-        System.out.println("提示:" + ma2.get("O_HINT"));*/
         return "from/fun";
     }
 
-    //登录  login
+    /**
+     * 登录
+     * @return
+     */
+    //跳转登录界面  login
     @RequestMapping("/login")
     public String login() {
         System.out.println("登录!");
         return "from/login";
     }
 
+    //验证登录
     @RequestMapping(value = "/logins", method = RequestMethod.POST)
     @ResponseBody
     public Boolean logins(@RequestParam("username") String username) {
@@ -179,6 +134,7 @@ public class BooksController {
         return aBoolean;
     }
 
+    //Object转字符串
     public String valueOf(Object obj) {
         return (obj == null) ? "null" : obj.toString();
     }
@@ -194,12 +150,12 @@ public class BooksController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss ");
         System.out.println("格式化输出：" + sdf.format(date));
-        Books books1 = booksService.getBooks(book, null,1);
+        Books books1 = booksService.getBooks(book, null, 1);
         Books books2 = booksService.getBooks(book, lot, 2);
-        Books books3 = booksService.getBooks(book, lot,1);
-        if(books2!=null || books3!=null){
-            str="已重复错误信息!";
-        }else {
+        Books books3 = booksService.getBooks(book, lot, 1);
+        if (books2 != null || books3 != null) {
+            str = "已重复错误信息!";
+        } else {
             //调用存储过程
             Map map = new HashMap();
             map.put("I_W0", lot);
@@ -371,49 +327,74 @@ public class BooksController {
         workbook.write(response.getOutputStream());
     }
 
-    @Autowired
-    private ImportService importService;
-    @Resource
-    private FeedstockMapper feedstockMapper;
 
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    //  Excel导入数据到数据库
+    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     @ResponseBody
-    // @Transactional(rollbackFor = Exception.class)
-    public String uploadExcel(@RequestParam MultipartFile file, HttpServletRequest request) throws Exception {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        System.out.println("名字:" + file);
-        InputStream inputStream = null;
-        List<List<Object>> list = null;
-        //MultipartFile file = multipartRequest.getFile("filename");
-        if (file.isEmpty()) {
-            return "文件不能为空";
-        }
-       /* if (xlsFile.isEmpty()) {
-            result.put("code", 500);
-            result.put("message", "导入文件为空！");
-            return result;
-        }*/
+    public String importExcel(@RequestParam("myfile") MultipartFile myFile) throws Exception {
+        System.out.println("控制层");
+        String str="";
+        List<Feedstock> tbagents = new ArrayList<>();
+        InputStream inputStream = myFile.getInputStream();
+        System.out.println("myFile:" + inputStream);
+        //07年的 不兼容之前
+        //XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
+        Workbook workbook = WorkbookFactory.create(myFile.getInputStream());
+        Sheet sheet = workbook.getSheetAt(0);  //示意访问sheet
+       // XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
 
-        inputStream = file.getInputStream();
-        list = importService.getBankListByExcel(inputStream, file.getOriginalFilename());
-        inputStream.close();
-//连接数据库部分
-        for (int i = 0; i < list.size(); i++) {
-            List<Object> lo = list.get(i);
-            Feedstock feedstock = new Feedstock();
-            //feedstock.setF_id((Integer) lo.get(0));
-            feedstock.setF_book(String.valueOf(lo.get(0)));
-            feedstock.setF_model(String.valueOf(lo.get(1)));
-            feedstock.setF_number((Integer) lo.get(2));
-            feedstock.setF_quantity((Integer) lo.get(3));
-            feedstock.setF_formula(String.valueOf(lo.get(4)));
-            feedstock.setF_time(String.valueOf(lo.get(5)));
-            feedstock.setF_state((Integer) lo.get(6));
-            feedstockMapper.addFeedstock(feedstock);
-            //调用mapper中的insert方法
+        //获取行数
+        int lastRowNum = sheet.getLastRowNum();
+        for (int i = 1; i <= lastRowNum; i++) {
+            Row row = sheet.getRow(i);
+            Feedstock quChannel = new Feedstock();
+            if (row.getCell(1) != null) {
+                row.getCell(1).setCellType(XSSFCell.CELL_TYPE_STRING);
+                quChannel.setF_book(row.getCell(1).getStringCellValue());
+                System.out.println("book:"+row.getCell(1).getStringCellValue());
+            }
+            if (row.getCell(2) != null) {
+                row.getCell(2).setCellType(XSSFCell.CELL_TYPE_STRING);
+                System.out.println("f_model:"+row.getCell(2).getStringCellValue());
+                quChannel.setF_model(row.getCell(2).getStringCellValue());
+
+            }
+            if (row.getCell(3) != null) {
+                row.getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);
+                System.out.println("f_number:"+row.getCell(3).getStringCellValue());
+                quChannel.setF_number(Integer.valueOf(row.getCell(3).getStringCellValue()));
+            }
+            if (row.getCell(4) != null) {
+                row.getCell(4).setCellType(XSSFCell.CELL_TYPE_STRING);
+                System.out.println("f_quantity:"+row.getCell(4).getStringCellValue());
+                quChannel.setF_quantity(Integer.valueOf(row.getCell(4).getStringCellValue()));
+            }
+            if (row.getCell(5) != null) {
+                row.getCell(5).setCellType(XSSFCell.CELL_TYPE_STRING);
+                System.out.println("f_formula:"+row.getCell(5).getStringCellValue());
+                quChannel.setF_formula(row.getCell(5).getStringCellValue());
+            }
+            if (row.getCell(6) != null) {
+                System.out.println("f_time:"+row.getCell(6).getStringCellValue());
+                quChannel.setF_time(row.getCell(6).getStringCellValue());
+            }
+            if (row.getCell(7) != null) {
+                row.getCell(7).setCellType(XSSFCell.CELL_TYPE_STRING);
+                System.out.println("f_state:"+Integer.valueOf(row.getCell(7).getStringCellValue()));
+                quChannel.setF_state(Integer.valueOf(row.getCell(7).getStringCellValue()));
+            }
+            tbagents.add(quChannel);
         }
-        return "上传成功";
+        try {
+            feedstockService.batchInsert(tbagents);
+            str="导入成功";
+        }catch (Exception e){
+            e.printStackTrace();
+            str="导入失败";
+        }
+
+        return str;
     }
 
 

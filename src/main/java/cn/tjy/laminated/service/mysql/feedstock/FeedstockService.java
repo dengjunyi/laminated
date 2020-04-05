@@ -28,4 +28,7 @@ public interface FeedstockService {
     public int updateFeedstock(Feedstock feedstock) throws Exception;
 
 
+    //execl 导入数据
+    void batchInsert(List<Feedstock> tbagentList);
+
 }

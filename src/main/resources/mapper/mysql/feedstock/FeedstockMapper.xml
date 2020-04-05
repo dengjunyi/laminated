@@ -7,6 +7,24 @@
         insert into feedstock(f_book, f_model,f_number, f_quantity, f_formula, f_time, f_state) values
          (#{f_book},#{f_model},#{f_number},#{f_quantity},#{f_formula},#{f_time},#{f_state})
     </insert>
+    <resultMap id="BaseResultMap" type="cn.tjy.laminated.pojo.mysql.Feedstock">
+        <id column="f_id" jdbcType="INTEGER" property="f_id" />
+        <result column="f_book" jdbcType="VARCHAR" property="f_book" />
+        <result column="f_model" jdbcType="VARCHAR" property="f_model" />
+        <result column="f_number" jdbcType="INTEGER" property="f_number" />
+        <result column="f_quantity" jdbcType="INTEGER" property="f_quantity" />
+        <result column="f_formula" jdbcType="VARCHAR" property="f_formula" />
+        <result column="f_time" jdbcType="VARCHAR" property="f_time" />
+        <result column="f_state" jdbcType="INTEGER" property="f_state" />
+    </resultMap>
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO feedstock(f_book,f_model,f_number,f_quantity,f_formula,f_time,f_state)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.f_book},#{item.f_model},#{item.f_number},#{item.f_quantity}
+            ,#{item.f_formula}, #{item.f_time},#{item.f_state})
+        </foreach>
+    </insert>
     <update id="updateFeedstock">
         update feedstock
         <trim prefix="set" suffixOverrides=",">
@@ -60,4 +78,5 @@
     <select id="getFeedstockSize" resultType="cn.tjy.laminated.pojo.mysql.Feedstock">
         SELECT * FROM feedstock WHERE f_state IN(1,3)
     </select>
+
 </mapper>

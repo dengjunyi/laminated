@@ -39,8 +39,8 @@ public interface FeedstockMapper {
     public int updateFeedstock(Feedstock feedstock) throws Exception;
 
 
-    @Select("SELECT * FROM feedstock WHERE f_book = #{f_book}")
-    Feedstock findUserByPhone(@Param("f_book") String f_book);
+    //execl 导入数据
+    void batchInsert(List<Feedstock> tbagentList);
 
 
 }
