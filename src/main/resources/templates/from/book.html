@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="/static/css/from/_reset.css">
     <link rel="stylesheet" href="/static/css/from/style.css">
     <style>
-        textarea{
+        textarea {
             width: 100%;
             height: 2rem;
             font-size: .16rem;
             padding: 0;
         }
-        input{
+
+        input {
             display: block;
             width: 98%;
             height: .4rem;
@@ -23,16 +24,43 @@
             border: 1px solid black;
         }
     </style>
+    <script src="../../static/js/cookie/cookie.js"></script>
 
 </head>
 <body>
 <div class="h1-title">DMC菲林</div>
 <div class="tips">数据录入</div>
-<input type="text" id="contentText" autofocus="autofocus">
-
+<input type="text" id="book" autofocus="autofocus">
 <script src="/static/js/layer/calc.js"></script>
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script src="/static/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="/static/js/jquery.cookie.js" type="text/javascript"></script>
+<script src="/static/js/cookie/cookie.js" type="text/javascript"></script>
 <script type="text/javascript">
+    document.onkeydown = function (e) {
+        var ev = document.all ? window.event : e;
+        if (ev.keyCode == 13) {
+            alert("进入")
+            var book = $("#book").val();
+            $.post("/Boolean", {book: book}, function (data,status) {
+                if(data){
+                    sounds("book存在");
+                   alert("book存在")
+                }else {
+                    $.post("/books", {book: book}, function (data, status) {
+                        alert(status);
+                        alert("result:" + data);
+                        sounds(data);
+                    })
+                }
+            },"json")
 
+        }
+    }
+    function sounds(name) {
+        $.post("/sound", {name: name}, function (data) {
+        })
+    }
 
 </script>
 </body>

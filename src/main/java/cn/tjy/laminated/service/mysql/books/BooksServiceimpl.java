@@ -39,15 +39,6 @@ public class BooksServiceimpl implements BooksService {
         return booksMapper.delBooks(books);
     }
 
-    @Override
-    public void login(Map<String, Object> map) {
-        booksMapper.login(map);
-    }
-
-    @Override
-    public void lot(Map<String, Object> map) {
-        booksMapper.lot(map);
-    }
 
 
 }

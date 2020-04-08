@@ -1,7 +1,6 @@
 package cn.tjy.laminated.controller.mysql;
 
-import cn.tjy.laminated.config.ImportService;
-import cn.tjy.laminated.dao.mysql.feedstock.FeedstockMapper;
+import cn.tjy.laminated.pojo.mysql.Book;
 import cn.tjy.laminated.pojo.mysql.Books;
 import cn.tjy.laminated.pojo.mysql.Feedstock;
 import cn.tjy.laminated.pojo.mysql.Smelter;
@@ -22,7 +21,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,49 +59,62 @@ public class BooksController {
     private FeedstockService feedstockService;//获取资源
 
 
-    //跳转主界面
-    @RequestMapping("/index")
-    public String idnexs() {
-        return "index";
-    }
-
-    //跳转功能列表  fun
-    @RequestMapping("/fun")
-    public String fun() {
-        return "from/fun";
-    }
-
     /**
      * 登录
+     *
      * @return
      */
     //跳转登录界面  login
     @RequestMapping("/login")
-    public String login() {
-        System.out.println("登录!");
-        return "from/login";
+    public String Login() {
+        System.out.println("登录界面!");
+        return "from/index";
+    }
+
+    @RequestMapping("/")
+    public String logins() {
+        System.out.println("登录界面!");
+        return "from/index";
     }
 
     //验证登录
     @RequestMapping(value = "/logins", method = RequestMethod.POST)
     @ResponseBody
-    public Boolean logins(@RequestParam("username") String username) {
+    public Boolean logins(@RequestParam("username") String username,@RequestParam("I_TYPE") String I_TYPE) {
         System.out.println("登录判断!");
         System.out.println("员工号:" + username);
+        System.out.println("类型:" + I_TYPE);
         Boolean isBaen = false;
         Map map = new HashMap();
         map.put("I_USER_CODE", username);
-        map.put("I_TYPE", "1");
+        map.put("I_TYPE", I_TYPE);
         map.put("I_DIV", "");
-        booksService.login(map);
+        usersService.login(map);
         System.out.println("调用成功");
         System.out.println("员工号:" + map.get("O_USER__NAME"));
         System.out.println("状态:" + map.get("O_KEY73"));
         System.out.println("提示:" + map.get("O_HINT"));
-        if (map.get("O_KEY73").equals("1")) {
+        System.out.println(valueOf(map.get("O_KEY73")).equals("1"));
+        if (valueOf(map.get("O_KEY73")).equals("1")) {
             isBaen = true;
         }
+        System.out.println("isBaen" + isBaen);
         return isBaen;
+    }
+
+
+    //跳转主界面
+    @RequestMapping("/from")
+    public String from() {
+        System.out.println("通过控制层");
+        return "from/from";
+    }
+
+
+    //跳转功能列表  fun
+    @RequestMapping("/fun")
+    public String fun() {
+        return "from/fun";
     }
 
 
@@ -115,6 +126,25 @@ public class BooksController {
         return "from/book";
     }
 
+    @RequestMapping(value = "/books", method = RequestMethod.POST)
+    @ResponseBody
+    public String book_is(@RequestParam("book") String book) throws Exception {
+        System.out.println("添加Book信息");
+        String str = "";
+
+        Book books = new Book();
+        books.setBook(book);
+        books.setState(1);
+        int i = bookService.addBook(books);
+        if (i > 0) {
+            str = "录入成功";
+        } else {
+            str = "录入失败!";
+        }
+        System.out.println("str:" + str);
+        ;
+        return str;
+    }
 
     //绑定book和lot
     @RequestMapping("/info")
@@ -328,13 +358,12 @@ public class BooksController {
     }
 
 
-
     //  Excel导入数据到数据库
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     @ResponseBody
     public String importExcel(@RequestParam("myfile") MultipartFile myFile) throws Exception {
         System.out.println("控制层");
-        String str="";
+        String str = "";
         List<Feedstock> tbagents = new ArrayList<>();
         InputStream inputStream = myFile.getInputStream();
         System.out.println("myFile:" + inputStream);
@@ -342,7 +371,7 @@ public class BooksController {
         //XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
         Workbook workbook = WorkbookFactory.create(myFile.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);  //示意访问sheet
-       // XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
+        // XSSFSheet sheet = xssfWorkbook.getSheetAt(0);
 
         //获取行数
         int lastRowNum = sheet.getLastRowNum();
@@ -352,46 +381,46 @@ public class BooksController {
             if (row.getCell(1) != null) {
                 row.getCell(1).setCellType(XSSFCell.CELL_TYPE_STRING);
                 quChannel.setF_book(row.getCell(1).getStringCellValue());
-                System.out.println("book:"+row.getCell(1).getStringCellValue());
+                System.out.println("book:" + row.getCell(1).getStringCellValue());
             }
             if (row.getCell(2) != null) {
                 row.getCell(2).setCellType(XSSFCell.CELL_TYPE_STRING);
-                System.out.println("f_model:"+row.getCell(2).getStringCellValue());
+                System.out.println("f_model:" + row.getCell(2).getStringCellValue());
                 quChannel.setF_model(row.getCell(2).getStringCellValue());
 
             }
             if (row.getCell(3) != null) {
                 row.getCell(3).setCellType(XSSFCell.CELL_TYPE_STRING);
-                System.out.println("f_number:"+row.getCell(3).getStringCellValue());
+                System.out.println("f_number:" + row.getCell(3).getStringCellValue());
                 quChannel.setF_number(Integer.valueOf(row.getCell(3).getStringCellValue()));
             }
             if (row.getCell(4) != null) {
                 row.getCell(4).setCellType(XSSFCell.CELL_TYPE_STRING);
-                System.out.println("f_quantity:"+row.getCell(4).getStringCellValue());
+                System.out.println("f_quantity:" + row.getCell(4).getStringCellValue());
                 quChannel.setF_quantity(Integer.valueOf(row.getCell(4).getStringCellValue()));
             }
             if (row.getCell(5) != null) {
                 row.getCell(5).setCellType(XSSFCell.CELL_TYPE_STRING);
-                System.out.println("f_formula:"+row.getCell(5).getStringCellValue());
+                System.out.println("f_formula:" + row.getCell(5).getStringCellValue());
                 quChannel.setF_formula(row.getCell(5).getStringCellValue());
             }
             if (row.getCell(6) != null) {
-                System.out.println("f_time:"+row.getCell(6).getStringCellValue());
+                System.out.println("f_time:" + row.getCell(6).getStringCellValue());
                 quChannel.setF_time(row.getCell(6).getStringCellValue());
             }
             if (row.getCell(7) != null) {
                 row.getCell(7).setCellType(XSSFCell.CELL_TYPE_STRING);
-                System.out.println("f_state:"+Integer.valueOf(row.getCell(7).getStringCellValue()));
+                System.out.println("f_state:" + Integer.valueOf(row.getCell(7).getStringCellValue()));
                 quChannel.setF_state(Integer.valueOf(row.getCell(7).getStringCellValue()));
             }
             tbagents.add(quChannel);
         }
         try {
             feedstockService.batchInsert(tbagents);
-            str="导入成功";
-        }catch (Exception e){
+            str = "导入成功";
+        } catch (Exception e) {
             e.printStackTrace();
-            str="导入失败";
+            str = "导入失败";
         }
 
         return str;

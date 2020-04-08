@@ -29,29 +29,6 @@
         </trim>
     </select>
 
-    <select id="login" statementType="CALLABLE">
-         {call BARCODE_DMC_WYH_EMPLOYEE(
-	        #{I_USER_CODE,mode=IN,jdbcType=VARCHAR},
-	        #{I_TYPE,mode=IN,jdbcType=INTEGER},
-	        #{I_DIV,mode=IN,jdbcType=VARCHAR},
-	        #{O_USER__NAME,mode=OUT,jdbcType=VARCHAR},
-	        #{O_KEY73,mode=OUT,jdbcType=INTEGER},
-	        #{O_HINT,mode=OUT,jdbcType=VARCHAR}
-	    )}
-
-    </select>
-    <select id="lot" statementType="CALLABLE">
-         {call BARCODE_DMC_WYH_WO(
-	        #{I_W0,mode=IN,jdbcType=VARCHAR},
-	        #{I_DIV,mode=IN,jdbcType=VARCHAR},
-	        #{O_FLAG,mode=OUT,jdbcType=INTEGER},
-	        #{O_PROC,mode=OUT,jdbcType=VARCHAR},
-	        #{O_CPNUMBER,mode=OUT,jdbcType=VARCHAR},
-	        #{O_QTY,mode=OUT,jdbcType=INTEGER},
-	        #{O_HINT,mode=OUT,jdbcType=VARCHAR}
-	    )}
-
-    </select>
     <insert id="addBooks">
         insert into books(b_lot, b_model, b_quantity, b_formula, b_book, b_time, b_operator, b_state)
          values (#{b_lot},#{b_model},#{b_quantity},#{b_formula},#{b_book},#{b_time},#{b_operator},#{b_state});
