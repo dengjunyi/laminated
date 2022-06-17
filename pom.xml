@@ -143,7 +143,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.60</version>
+            <version>1.2.83</version>
         </dependency>
         <dependency>
             <groupId>net.minidev</groupId>
@@ -211,7 +211,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.83</version>
         </dependency>
         <!-- jackson转换json用 @ResponseBody默认调用jackson，将java对象转为json -->
         <dependency>
